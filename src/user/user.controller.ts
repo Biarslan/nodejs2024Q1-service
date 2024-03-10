@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,13 +8,13 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { validate as uuidValidate } from 'uuid';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdatePasswordDto } from 'src/dto/updateUser.dto';
 
@@ -28,10 +27,7 @@ export class UserController {
     return this.userService.findAll();
   }
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    if (!uuidValidate(id))
-      throw new BadRequestException('id is not a valid uuid');
-
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     const user = this.userService.findOne(id);
     if (!user) throw new NotFoundException('There is no user with this id');
     return user;
@@ -44,10 +40,10 @@ export class UserController {
   }
   @UsePipes(new ValidationPipe())
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePasswordDto) {
-    if (!uuidValidate(id))
-      throw new BadRequestException('id is not a valid uuid');
-
+  update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdatePasswordDto,
+  ) {
     const updatedUser = this.userService.update(id, dto);
     if (updatedUser === undefined)
       throw new NotFoundException('There is no user with this id');
@@ -57,9 +53,7 @@ export class UserController {
   }
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id') id: string) {
-    if (!uuidValidate(id))
-      throw new BadRequestException('id is not a valid uuid');
+  delete(@Param('id', new ParseUUIDPipe()) id: string) {
     const userDeleteResponse = this.userService.delete(id);
     if (userDeleteResponse === undefined)
       throw new NotFoundException('There is no user with this id');
