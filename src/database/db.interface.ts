@@ -36,7 +36,7 @@ export interface Favorites {
 
 export interface DataBase {
   users: User[];
-  artsits: Artist[];
+  artists: Artist[];
   tracks: Track[];
   albums: Album[];
   favorites: Favorites;

@@ -5,7 +5,7 @@ import { DataBase } from './db.interface';
 export class DatabaseService {
   db: DataBase = {
     users: [],
-    artsits: [],
+    artists: [],
     albums: [],
     tracks: [],
     favorites: {
