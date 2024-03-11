@@ -52,6 +52,10 @@ export class ArtistService {
     const updatedAlbums = db.albums.map((album) => {
       return album.artistId === id ? { ...album, artistId: null } : album;
     });
+    const updatedFavArtist = db.favorites.artists.filter(
+      (artistId) => artistId !== id,
+    );
+    db.favorites.tracks = updatedFavArtist;
     db.artists = updatedArtists;
     db.tracks = updatedTracks;
     db.albums = updatedAlbums;

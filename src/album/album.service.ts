@@ -50,6 +50,10 @@ export class AlbumService {
     const updatedTracks = db.tracks.map((track) => {
       return track.albumId === id ? { ...track, albumId: null } : track;
     });
+    const updatedFavAlbum = db.favorites.albums.filter(
+      (albumId) => albumId !== id,
+    );
+    db.favorites.albums = updatedFavAlbum;
     db.albums = updatedAlbums;
     db.tracks = updatedTracks;
     this.databaseService.updateDB(db);

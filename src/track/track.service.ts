@@ -49,6 +49,10 @@ export class TrackService {
     const track = db.tracks.find((track) => track.id === id);
     if (track === undefined) return undefined;
     const updatedTracks = db.tracks.filter((track) => track.id !== id);
+    const updatedFavTracks = db.favorites.tracks.filter(
+      (trackId) => trackId !== id,
+    );
+    db.favorites.tracks = updatedFavTracks;
     db.tracks = updatedTracks;
     this.databaseService.updateDB(db);
     return true;
