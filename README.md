@@ -31,11 +31,8 @@ npm install
 npm start
 ```
 
-Default port is 4000. You can change PORT in `.env` file. There is `.env.example` file, rename and use it.
-
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+    Server running on http://localhost
+    Default port is 4000. You can change PORT in `.env` file. There is `.env.example` file, rename and use it.
 
 ## Testing
 
@@ -58,6 +55,10 @@ npm run format
 ```
 
 # API Endpoints
+
+After starting the app on port (4000 as default) you can open
+in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## User
 
@@ -178,3 +179,9 @@ npm run format
 - `/favs/artist/{id}`
   - `POST` - Add artist with id to the favorites
   - `DELETE` - Delete artist with id from favorites
+
+## Useful information
+
+- When you delete Artist, Album or Track, it's id deletes from favorites (if was there) and references to it in other entities becoming null. For example: Artist is deleted => this artistId in corresponding Albums's and Track's become null + this artist's id is deleted from favorites, same logic for Album and Track.
+- Non-existing entity can't be added to Favorites.
+- User's password excluded from server response.
