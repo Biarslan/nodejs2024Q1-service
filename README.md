@@ -31,7 +31,7 @@ npm install
 npm start
 ```
 
-Server running on http://localhost
+Server running on `http://localhost:{PORT}`
 Default port is 4000. You can change PORT in `.env` file. There is `.env.example` file, rename and use it.
 
 ## Testing
