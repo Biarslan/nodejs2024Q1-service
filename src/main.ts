@@ -9,7 +9,7 @@ async function bootstrap() {
   const config = app.get(ConfigService);
 
   const apiDoc = await getSwaggerDoc();
-  SwaggerModule.setup('api', app, apiDoc);
+  SwaggerModule.setup('doc', app, apiDoc);
 
   const PORT = config.get('PORT') || 4000;
   await app.listen(PORT);
