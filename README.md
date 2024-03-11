@@ -7,6 +7,10 @@ This is Home Library Service! Users can create, read, update, delete data about 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
+## Technical requirements
+
+Use 20 LTS version of Node.js
+
 ## Downloading
 
 ```
