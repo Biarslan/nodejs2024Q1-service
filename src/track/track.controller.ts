@@ -22,36 +22,36 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Get()
-  findAll() {
-    return this.trackService.findAll();
+  async findAll() {
+    return await this.trackService.findAll();
   }
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const track = this.trackService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const track = await this.trackService.findOne(id);
     if (!track) throw new NotFoundException('There is no track with this id');
     return track;
   }
   @UsePipes(new ValidationPipe())
   @Post()
-  create(@Body() dto: CreateTrackDto) {
-    const newTrack = this.trackService.create(dto);
+  async create(@Body() dto: CreateTrackDto) {
+    const newTrack = await this.trackService.create(dto);
     return newTrack;
   }
   @UsePipes(new ValidationPipe())
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdateTrackDto,
   ) {
-    const updatedTrack = this.trackService.update(id, dto);
+    const updatedTrack = await this.trackService.update(id, dto);
     if (updatedTrack === undefined)
       throw new NotFoundException('There is no track with this id');
     return updatedTrack;
   }
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', new ParseUUIDPipe()) id: string) {
-    const trackDeleteResponse = this.trackService.delete(id);
+  async delete(@Param('id', new ParseUUIDPipe()) id: string) {
+    const trackDeleteResponse = await this.trackService.delete(id);
     if (trackDeleteResponse === undefined)
       throw new NotFoundException('There is no track with this id');
   }

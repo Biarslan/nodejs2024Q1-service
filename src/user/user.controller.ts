@@ -23,28 +23,28 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    const user = this.userService.findOne(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    const user = await this.userService.findOne(id);
     if (!user) throw new NotFoundException('There is no user with this id');
     return user;
   }
   @UsePipes(new ValidationPipe())
   @Post()
-  create(@Body() dto: CreateUserDto) {
-    const newUser = this.userService.create(dto);
+  async create(@Body() dto: CreateUserDto) {
+    const newUser = await this.userService.create(dto);
     return newUser;
   }
   @UsePipes(new ValidationPipe())
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() dto: UpdatePasswordDto,
   ) {
-    const updatedUser = this.userService.update(id, dto);
+    const updatedUser = await this.userService.update(id, dto);
     if (updatedUser === undefined)
       throw new NotFoundException('There is no user with this id');
     if (updatedUser === null)
@@ -53,8 +53,8 @@ export class UserController {
   }
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', new ParseUUIDPipe()) id: string) {
-    const userDeleteResponse = this.userService.delete(id);
+  async delete(@Param('id', new ParseUUIDPipe()) id: string) {
+    const userDeleteResponse = await this.userService.delete(id);
     if (userDeleteResponse === undefined)
       throw new NotFoundException('There is no user with this id');
   }

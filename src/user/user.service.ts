@@ -2,67 +2,69 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UpdatePasswordDto } from 'src/dto/updateUser.dto';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
   constructor(private readonly databaseService: DatabaseService) {}
-  findAll() {
-    const db = this.databaseService.getDB();
-    const cleanUsers = [...db.users].map((user) => {
+  async findAll() {
+    const users = await this.databaseService.user.findMany();
+    const cleanUsers = users.map((user) => {
       delete user.password;
-      return user;
+      return {
+        ...user,
+        createdAt: user.createdAt.getTime(),
+        updatedAt: user.updatedAt.getTime(),
+      };
     });
     return cleanUsers;
   }
-  findOne(id: string) {
-    const db = this.databaseService.getDB();
-    const user = db.users.find((user) => user.id === id);
-    if (user === undefined) return undefined;
-    const cleanUser = { ...user };
+  async findOne(id: string) {
+    const user = await this.databaseService.user.findUnique({ where: { id } });
+    if (user === null) return undefined;
+    const cleanUser = {
+      ...user,
+      createdAt: user.createdAt.getTime(),
+      updatedAt: user.updatedAt.getTime(),
+    };
     delete cleanUser.password;
     return user;
   }
-  create(dto: CreateUserDto) {
-    const newUser = {
-      id: uuidv4(),
-      login: dto.login,
-      password: dto.password,
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    const db = this.databaseService.getDB();
-    db.users.push({ ...newUser });
-    this.databaseService.updateDB(db);
+  async create(dto: CreateUserDto) {
+    const newUser = await this.databaseService.user.create({ data: dto });
     delete newUser.password;
-    return newUser;
-  }
-  update(id: string, dto: UpdatePasswordDto) {
-    const db = this.databaseService.getDB();
-    const user = db.users.find((user) => user.id === id);
-    if (user === undefined) return undefined;
-    if (user.password !== dto.oldPassword) return null;
-    const updatedUser = {
-      ...user,
-      password: dto.newPassword,
-      version: user.version + 1,
-      updatedAt: Date.now(),
+    return {
+      ...newUser,
+      createdAt: newUser.createdAt.getTime(),
+      updatedAt: newUser.updatedAt.getTime(),
     };
-    const updatedUsers = db.users.filter((user) => user.id !== id);
-    updatedUsers.push(updatedUser);
-    db.users = updatedUsers;
-    this.databaseService.updateDB(db);
-    delete updatedUser.password;
-    return updatedUser;
   }
-  delete(id: string) {
-    const db = this.databaseService.getDB();
-    const user = db.users.find((user) => user.id === id);
-    if (user === undefined) return undefined;
-    const updatedUsers = db.users.filter((user) => user.id !== id);
-    db.users = updatedUsers;
-    this.databaseService.updateDB(db);
+  async update(id: string, dto: UpdatePasswordDto) {
+    const user = await this.databaseService.user.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (user === null) return undefined;
+    if (user.password !== dto.oldPassword) return null;
+    const updatedUser = await this.databaseService.user.update({
+      where: { id },
+      data: {
+        password: dto.newPassword,
+        version: { increment: 1 },
+      },
+    });
+
+    delete updatedUser.password;
+    return {
+      ...updatedUser,
+      createdAt: updatedUser.createdAt.getTime(),
+      updatedAt: updatedUser.updatedAt.getTime(),
+    };
+  }
+  async delete(id: string) {
+    const user = await this.databaseService.user.findUnique({ where: { id } });
+    if (user === null) return undefined;
+    await this.databaseService.user.delete({ where: { id } });
     return true;
   }
 }

@@ -2,59 +2,53 @@ import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateTrackDto } from 'src/dto/createTrack.dto';
 import { UpdateTrackDto } from 'src/dto/updateTrack.dto';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class TrackService {
   constructor(private readonly databaseService: DatabaseService) {}
-  findAll() {
-    const db = this.databaseService.getDB();
-    return db.tracks;
+  async findAll() {
+    const tracks = await this.databaseService.track.findMany();
+    return tracks;
   }
-  findOne(id: string) {
-    const db = this.databaseService.getDB();
-    const track = db.tracks.find((track) => track.id === id);
-    if (track === undefined) return undefined;
+  async findOne(id: string) {
+    const track = await this.databaseService.track.findUnique({
+      where: { id },
+    });
+    if (track === null) return undefined;
     return track;
   }
-  create(dto: CreateTrackDto) {
-    const newTrack = {
-      id: uuidv4(),
-      name: dto.name,
-      albumId: dto.albumId,
-      artistId: dto.artistId,
-      duration: dto.duration,
-    };
-    const db = this.databaseService.getDB();
-    db.tracks.push({ ...newTrack });
-    this.databaseService.updateDB(db);
+  async create(dto: CreateTrackDto) {
+    const newTrack = await this.databaseService.track.create({ data: dto });
     return newTrack;
   }
-  update(id: string, dto: UpdateTrackDto) {
-    const db = this.databaseService.getDB();
-    const track = db.tracks.find((track) => track.id === id);
-    if (track === undefined) return undefined;
-    const updatedTrack = {
-      ...track,
-      ...dto,
-    };
-    const updatedTracks = db.tracks.filter((track) => track.id !== id);
-    updatedTracks.push(updatedTrack);
-    db.tracks = updatedTracks;
-    this.databaseService.updateDB(db);
+  async update(id: string, dto: UpdateTrackDto) {
+    const track = await this.databaseService.track.findUnique({
+      where: { id },
+    });
+
+    if (track === null) return undefined;
+    const updatedTrack = await this.databaseService.track.update({
+      where: { id },
+      data: dto,
+    });
     return updatedTrack;
   }
-  delete(id: string) {
-    const db = this.databaseService.getDB();
-    const track = db.tracks.find((track) => track.id === id);
-    if (track === undefined) return undefined;
-    const updatedTracks = db.tracks.filter((track) => track.id !== id);
-    const updatedFavTracks = db.favorites.tracks.filter(
-      (trackId) => trackId !== id,
-    );
-    db.favorites.tracks = updatedFavTracks;
-    db.tracks = updatedTracks;
-    this.databaseService.updateDB(db);
+  async delete(id: string) {
+    const track = await this.databaseService.track.findUnique({
+      where: { id },
+    });
+    if (track === null) return undefined;
+    // const updatedTracks = db.tracks.filter((track) => track.id !== id);
+    // const updatedTracks = db.tracks.map((track) => {
+    //   return track.trackId === id ? { ...track, trackId: null } : track;
+    // });
+    // const updatedFavTrack = db.favorites.tracks.filter(
+    //   (trackId) => trackId !== id,
+    // );
+    // db.favorites.tracks = updatedFavTrack;
+    // db.tracks = updatedTracks;
+    // db.tracks = updatedTracks;
+    await this.databaseService.track.delete({ where: { id } });
     return true;
   }
 }

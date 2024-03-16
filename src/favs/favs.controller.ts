@@ -17,13 +17,13 @@ export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
   @Get()
-  fildAll() {
-    return this.favsService.findAll();
+  async fildAll() {
+    return await this.favsService.findAll();
   }
 
   @Post('track/:id')
-  addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    const addTrackRes = this.favsService.addTrack(id);
+  async addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const addTrackRes = await this.favsService.addTrack(id);
     if (!addTrackRes) {
       throw new UnprocessableEntityException(
         'Track with this id does not exist',
@@ -33,8 +33,8 @@ export class FavsController {
   }
   @Delete('track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    const deleteTrackRes = this.favsService.deleteTrack(id);
+  async deleteTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    const deleteTrackRes = await this.favsService.deleteTrack(id);
     if (!deleteTrackRes) {
       throw new NotFoundException('Track with this id not found');
     }
@@ -42,8 +42,8 @@ export class FavsController {
   }
 
   @Post('album/:id')
-  addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    const addTrackRes = this.favsService.addAlbum(id);
+  async addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const addTrackRes = await this.favsService.addAlbum(id);
     if (!addTrackRes) {
       throw new UnprocessableEntityException(
         'Album with this id does not exist',
@@ -53,16 +53,16 @@ export class FavsController {
   }
   @Delete('album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    const deleteTrackRes = this.favsService.deleteAlbum(id);
+  async deleteAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    const deleteTrackRes = await this.favsService.deleteAlbum(id);
     if (!deleteTrackRes) {
       throw new NotFoundException('Album with this id not found');
     }
     return 'Album deleted from favorites';
   }
   @Post('artist/:id')
-  addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    const addArtistRes = this.favsService.addArtist(id);
+  async addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const addArtistRes = await this.favsService.addArtist(id);
     if (!addArtistRes) {
       throw new UnprocessableEntityException(
         'Artist with this id does not exist',
@@ -72,8 +72,8 @@ export class FavsController {
   }
   @Delete('artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteArtist(@Param('id', new ParseUUIDPipe()) id: string) {
-    const deleteArtistRes = this.favsService.deleteArtist(id);
+  async deleteArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    const deleteArtistRes = await this.favsService.deleteArtist(id);
     if (!deleteArtistRes) {
       throw new NotFoundException('Artist with this id not found');
     }
