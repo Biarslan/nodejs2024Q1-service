@@ -11,8 +11,6 @@ services:
         - path: ./src
           target: /app/src
           action: sync
-        - path: package.json
-          action: rebuild
     depends_on:
       - db
     environment:
@@ -22,6 +20,7 @@ services:
       - ${PORT}:${PORT}
     volumes:
       - ./src:/app/src
+      - app-logs:/log
     restart: always
     networks:
       - network_bridge
@@ -36,6 +35,7 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - db:/var/lib/postgresql/data
+      - db-logs:/var/log/postgresql
     restart: always
     networks:
       - network_bridge
@@ -43,6 +43,8 @@ services:
       - ${DB_PORT}:5432
 volumes:
   db:
+  db-logs:
+  app-logs:
 
 networks:
   network_bridge:
