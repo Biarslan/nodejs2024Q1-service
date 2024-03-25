@@ -25,7 +25,7 @@ git checkout development-part-2
 ```
 
 ## Running application
-:warning: Rename .env.example into .env
+:warning: - Rename `.env.example` into `.env`
 ```
 npm run compose
 ```
