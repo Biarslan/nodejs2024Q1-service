@@ -6,6 +6,7 @@ This is Home Library Service! Users can create, read, update, delete data about 
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker](https://docs.docker.com/engine/install/)
 
 ## Technical requirements
 
@@ -20,19 +21,19 @@ git clone https://github.com/Biarslan/nodejs2024Q1-service
 ## Switch to development branch
 
 ```
-git checkout development
-```
-
-## Installing NPM modules
-
-```
-npm install
+git checkout development-part-2
 ```
 
 ## Running application
+:warning: Rename .env.example into .env
+```
+npm run compose
+```
+
+## Check for vulnerabilities
 
 ```
-npm start
+npm run check
 ```
 
 Server running on `http://localhost:{PORT}`
