@@ -19,10 +19,13 @@
     "test:refresh": "cross-env TEST_MODE=auth jest --testPathPattern refresh.e2e.spec.ts --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "compose": "docker compose up",
+    "check": "docker scout cves local://nodejs2024q1-service-app"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.3",
+    "@nestjs/config": "^3.2.1",
     "@nestjs/core": "^10.3.3",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.5",
