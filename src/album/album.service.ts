@@ -38,16 +38,6 @@ export class AlbumService {
     });
     if (album === null) return undefined;
     await this.databaseService.album.delete({ where: { id } });
-    // const updatedAlbums = db.albums.filter((album) => album.id !== id);
-    // const updatedTracks = db.tracks.map((track) => {
-    //   return track.albumId === id ? { ...track, albumId: null } : track;
-    // });
-    // const updatedFavAlbum = db.favorites.albums.filter(
-    //   (albumId) => albumId !== id,
-    // );
-    // db.favorites.albums = updatedFavAlbum;
-    // db.albums = updatedAlbums;
-    // db.tracks = updatedTracks;
     return true;
   }
 }

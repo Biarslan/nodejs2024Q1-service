@@ -38,16 +38,6 @@ export class TrackService {
       where: { id },
     });
     if (track === null) return undefined;
-    // const updatedTracks = db.tracks.filter((track) => track.id !== id);
-    // const updatedTracks = db.tracks.map((track) => {
-    //   return track.trackId === id ? { ...track, trackId: null } : track;
-    // });
-    // const updatedFavTrack = db.favorites.tracks.filter(
-    //   (trackId) => trackId !== id,
-    // );
-    // db.favorites.tracks = updatedFavTrack;
-    // db.tracks = updatedTracks;
-    // db.tracks = updatedTracks;
     await this.databaseService.track.delete({ where: { id } });
     return true;
   }

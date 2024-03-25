@@ -38,16 +38,6 @@ export class ArtistService {
     });
     if (artist === null) return undefined;
     await this.databaseService.artist.delete({ where: { id } });
-    // const updatedArtists = db.artists.filter((artist) => artist.id !== id);
-    // const updatedTracks = db.tracks.map((track) => {
-    //   return track.artistId === id ? { ...track, artistId: null } : track;
-    // });
-    // const updatedFavArtist = db.favorites.artists.filter(
-    //   (artistId) => artistId !== id,
-    // );
-    // db.favorites.artists = updatedFavArtist;
-    // db.artists = updatedArtists;
-    // db.tracks = updatedTracks;
     return true;
   }
 }
