@@ -23,7 +23,7 @@ export class FavsService {
       },
     });
 
-    return favs || (await this.databaseService.favorites.create({ data: {} }));
+    return favs || { artists: [], tracks: [], albums: [] };
   }
 
   async getFavs() {
