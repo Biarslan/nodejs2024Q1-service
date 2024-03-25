@@ -26,24 +26,36 @@ export class FavsService {
     return favs || (await this.databaseService.favorites.create({ data: {} }));
   }
 
-  async addTrack(id: string) {
-    const track = await this.databaseService.track.findUnique({
-      where: { id },
-    });
-    if (track === null) return undefined;
-    const favs =
+  async getFavs() {
+    return (
       (await this.databaseService.favorites.findFirst()) ||
-      (await this.databaseService.favorites.create({ data: {} }));
+      (await this.databaseService.favorites.create({ data: {} }))
+    );
+  }
 
+  async isExist(type: 'track' | 'artist' | 'album', id: string) {
+    switch (type) {
+      case 'track':
+        return await this.databaseService.track.findUnique({ where: { id } });
+      case 'artist':
+        return await this.databaseService.artist.findUnique({ where: { id } });
+      case 'album':
+        return await this.databaseService.album.findUnique({ where: { id } });
+      default:
+        return null;
+    }
+  }
+
+  async addTrack(id: string) {
+    if (!(await this.isExist('track', id))) return undefined;
+    const favs = await this.getFavs();
     return await this.databaseService.favorites.update({
       where: { id: favs.id },
       data: { tracks: { connect: { id } } },
     });
   }
   async deleteTrack(id: string) {
-    const favs =
-      (await this.databaseService.favorites.findFirst()) ||
-      (await this.databaseService.favorites.create({ data: {} }));
+    const favs = await this.getFavs();
     await this.databaseService.favorites.update({
       where: { id: favs.id },
       data: { tracks: { disconnect: { id } } },
@@ -53,13 +65,8 @@ export class FavsService {
   }
 
   async addAlbum(id: string) {
-    const album = await this.databaseService.album.findUnique({
-      where: { id },
-    });
-    if (album === null) return undefined;
-    const favs =
-      (await this.databaseService.favorites.findFirst()) ||
-      (await this.databaseService.favorites.create({ data: {} }));
+    if (!(await this.isExist('album', id))) return undefined;
+    const favs = await this.getFavs();
 
     return await this.databaseService.favorites.update({
       where: { id: favs.id },
@@ -67,9 +74,7 @@ export class FavsService {
     });
   }
   async deleteAlbum(id: string) {
-    const favs =
-      (await this.databaseService.favorites.findFirst()) ||
-      (await this.databaseService.favorites.create({ data: {} }));
+    const favs = await this.getFavs();
     await this.databaseService.favorites.update({
       where: { id: favs.id },
       data: { albums: { disconnect: { id } } },
@@ -79,13 +84,8 @@ export class FavsService {
   }
 
   async addArtist(id: string) {
-    const artist = await this.databaseService.artist.findUnique({
-      where: { id },
-    });
-    if (artist === null) return undefined;
-    const favs =
-      (await this.databaseService.favorites.findFirst()) ||
-      (await this.databaseService.favorites.create({ data: {} }));
+    if (!(await this.isExist('artist', id))) return undefined;
+    const favs = await this.getFavs();
 
     return await this.databaseService.favorites.update({
       where: { id: favs.id },
@@ -93,9 +93,7 @@ export class FavsService {
     });
   }
   async deleteArtist(id: string) {
-    const favs =
-      (await this.databaseService.favorites.findFirst()) ||
-      (await this.databaseService.favorites.create({ data: {} }));
+    const favs = await this.getFavs();
     await this.databaseService.favorites.update({
       where: { id: favs.id },
       data: { artists: { disconnect: { id } } },
