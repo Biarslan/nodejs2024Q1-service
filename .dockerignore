@@ -1,0 +1,15 @@
+.dockerignore
+.git*
+.gitignore
+.vs
+.git
+.env
+.gitignore
+node_modules
+DS_Store
+**/.vscode
+docker-compose*
+dist
+test
+npm-debug.log
+Dockerfile

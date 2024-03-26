@@ -1,0 +1,50 @@
+version: '3.5'
+
+services:
+  app:
+    container_name: app_container
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    develop:
+      watch:
+        - path: ./src
+          target: /app/src
+          action: sync
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}"
+      PORT: ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./src:/app/src
+      - app-logs:/log
+    restart: always
+    networks:
+      - network_bridge
+  db:
+    container_name: db_container
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db:/var/lib/postgresql/data
+      - db-logs:/var/log/postgresql
+    restart: always
+    networks:
+      - network_bridge
+    ports:
+      - ${DB_PORT}:5432
+volumes:
+  db:
+  db-logs:
+  app-logs:
+
+networks:
+  network_bridge:
